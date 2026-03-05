@@ -8,8 +8,8 @@ function App() {
   return (
     <div className="app-container">
       <nav style={{ padding: '1rem', background: '#f4f4f4', marginBottom: '1rem' }}>
-        <button onClick={() => setCurrentPage('home')}>Startsida</button>
-        <button onClick={() => setCurrentPage('orders')} style={{ marginLeft: '10px' }}>Ordrar</button>
+        <button onClick={() => setCurrentPage('home')}>Dashboard</button>
+        <button onClick={() => setCurrentPage('orders')} style={{ marginLeft: '10px' }}>Orders</button>
       </nav>
 
       <main style={{ padding: '0 1rem' }}>

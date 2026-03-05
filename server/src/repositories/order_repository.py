@@ -1,7 +1,8 @@
 from typing import List, Optional
 
-from src.database.dbmanager import DatabaseManager
 from src.models.order import Order
+
+from src.database.dbmanager import DatabaseManager
 from src.database.order.config import ORDER_TABLE_NAME
 from src.database.order.config import ORDER_ITEM_TABLE_NAME
 

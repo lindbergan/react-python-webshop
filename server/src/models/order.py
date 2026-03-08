@@ -22,6 +22,13 @@ class OrderCreate(SQLModel):
     items: Sequence[OrderItemBase]
 
 
+class OrderRead(SQLModel):
+    date: date
+    customer_name: str
+    currency: str
+    items: Sequence[OrderItemBase] = []
+
+
 # Data base tables
 
 

@@ -5,3 +5,5 @@ __pycache__
 .mypy_cache/
 *.sql
 !server/postgres/*.sql
+server/migrations
+alembic.ini

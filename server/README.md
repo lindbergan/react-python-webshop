@@ -11,7 +11,7 @@ python main.py
 Run API
 
 ```
-python -m uvicorn src.api.api:app --reload
+python -m uvicorn main:app --reload
 ```
 
 

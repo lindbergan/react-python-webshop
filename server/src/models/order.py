@@ -1,7 +1,7 @@
 from typing import List
 from uuid import UUID, uuid4
 from datetime import date
-from typing import ClassVar, Sequence
+from typing import ClassVar, Sequence, Optional
 from sqlmodel import SQLModel, Field, Relationship
 
 # API validation schemas
@@ -13,6 +13,7 @@ class OrderItemBase(SQLModel):
     quantity: int
     unit_price_excl_tax: float
     tax_rate: float
+    product_id: Optional[UUID]
 
 
 class OrderCreate(SQLModel):
@@ -23,6 +24,7 @@ class OrderCreate(SQLModel):
 
 
 class OrderRead(SQLModel):
+    id: UUID
     date: date
     customer_name: str
     currency: str
@@ -54,3 +56,5 @@ class OrderItem(SQLModel, table=True):
 
     order_id: UUID = Field(foreign_key="orders.id")
     order: "Order" = Relationship(back_populates="items")
+
+    product_id: Optional[UUID] = Field(foreign_key="products.id", default=None)

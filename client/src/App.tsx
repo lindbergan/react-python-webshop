@@ -2,36 +2,55 @@ import { useState } from 'react'
 import OrderPage from './pages/OrderPage'
 import ProductPage from './pages/ProductPage'
 import HomePage from './pages/HomePage'
+import "./App.css"
 
 function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'orders' | 'products'>('home')
 
   const pageElement = () => {
-    if (currentPage === "home") {
-      return <HomePage />
-    }
-    else if (currentPage === "orders") {
-      return <OrderPage />
-    }
-    else if (currentPage === "products") {
-      return <ProductPage />
-    }
-
-    return `<p>Error</p>`
+    if (currentPage === 'home') return <HomePage onNavigate={setCurrentPage} />
+    if (currentPage === 'orders') return <OrderPage />
+    if (currentPage === 'products') return <ProductPage />
+    return <p>Error</p>
   }
 
   return (
-    <div className="app-container">
-      <nav style={{ padding: '1rem', background: '#f4f4f4', marginBottom: '1rem' }}>
-        <button onClick={() => setCurrentPage('home')}>Dashboard</button>
-        <button onClick={() => setCurrentPage('orders')} style={{ marginLeft: '10px' }}>Orders</button>
-        <button onClick={() => setCurrentPage('products')} style={{ marginLeft: '10px' }}>Products</button>
-      </nav>
+    <>
+      <div className="app-shell">
+        {/* Sidebar */}
+        <nav className="sidebar">
+          <div className="sidebar-logo">
+            <div className="sidebar-logo-mark">Maison</div>
+            <div className="sidebar-logo-sub">Commerce Suite</div>
+          </div>
 
-      <main style={{ padding: '0 1rem' }}>
-        {pageElement()}
-      </main>
-    </div>
+          <div className="nav-label">Navigation</div>
+
+          {(['home', 'orders', 'products'] as const).map((page) => {
+            const meta = {
+              home: { icon: '◈', label: 'Dashboard' },
+              orders: { icon: '◎', label: 'Orders' },
+              products: { icon: '◇', label: 'Products' },
+            }[page]
+            return (
+              <div
+                key={page}
+                className={`nav-item ${currentPage === page ? 'active' : ''}`}
+                onClick={() => setCurrentPage(page)}
+              >
+                <span className="nav-icon">{meta.icon}</span>
+                {meta.label}
+              </div>
+            )
+          })}
+        </nav>
+
+        {/* Content */}
+        <main className="main-content">
+          {pageElement()}
+        </main>
+      </div>
+    </>
   )
 }
 

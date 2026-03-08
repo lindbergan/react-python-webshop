@@ -93,7 +93,7 @@ const ProductPage = () => {
           <tbody>
             {filtered.map(product => {
               const price = parseFloat(product.unit_price_excl_tax)
-              const tax = parseFloat(product.tax_rate)
+              const tax   = parseFloat(product.tax_rate)
               const taxAmount = price * tax
               const priceInclTax = price + taxAmount
               return (
@@ -106,7 +106,7 @@ const ProductPage = () => {
                   </td>
                   <td><span className="badge badge-gold">{product.sku}</span></td>
                   <td>{price.toFixed(2)}</td>
-                  <td style={{ color: 'var(--text-muted)' }}>{taxAmount.toFixed(2)} ({(tax * 100).toFixed(0)}%)</td>
+                  <td style={{ color: 'var(--text-muted)' }}>+{taxAmount.toFixed(2)} ({(tax * 100).toFixed(0)}%)</td>
                   <td style={{ fontWeight: 500 }}>{priceInclTax.toFixed(2)}</td>
                   <td><span className="muted-id">{product.id}</span></td>
                 </tr>

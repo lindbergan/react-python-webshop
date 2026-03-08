@@ -9,8 +9,8 @@ interface Props {
 
 const HomePage = ({ onNavigate }: Props) => {
   const [products, setProducts] = useState<Product[]>([])
-  const [orders, setOrders] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
+  const [orders, setOrders]     = useState<Order[]>([])
+  const [loading, setLoading]   = useState(true)
 
   useEffect(() => {
     Promise.all([

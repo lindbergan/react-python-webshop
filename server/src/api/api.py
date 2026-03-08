@@ -7,7 +7,7 @@ from uuid import UUID
 
 from src.database.dbconfig import settings
 from src.repositories.order_repository import OrderRepository
-from src.models.order import Order, OrderCreate, OrderItem
+from src.models.order import Order, OrderCreate, OrderItem, OrderRead
 
 DATABASE_URL = f"postgresql://{settings.db_user}:{settings.db_password}@{settings.db_host}/{settings.db_name}"
 engine = create_engine(DATABASE_URL)
@@ -47,7 +47,7 @@ async def create_order(order_data: OrderCreate):
             status_code=400, detail="Order could not be created.")
 
 
-@app.get("/order", response_model=list[Order])
+@app.get("/order", response_model=list[OrderRead])
 async def get_orders():
     with Session(engine) as session:
         repo = OrderRepository(session)
@@ -55,7 +55,7 @@ async def get_orders():
         return order_data
 
 
-@app.get("/order/{order_id}", response_model=Order)
+@app.get("/order/{order_id}", response_model=OrderRead)
 async def get_order(order_id: str):
     with Session(engine) as session:
         repo = OrderRepository(session)

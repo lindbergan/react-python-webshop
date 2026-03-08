@@ -18,13 +18,15 @@ class OrderRepository:
 
     def get_all_orders(self) -> Sequence[Order]:
         """Get all orders with items already attached"""
-        statement = select(Order).options(selectinload(Order.items))
+        statement = select(Order).options(
+            selectinload(Order.items))  # type: ignore
         return self.session.exec(statement).all()
 
     def get_by_id(self, order_id: UUID) -> Optional[Order]:
         """Get order by ID"""
         statement = select(Order).where(
-            Order.id == order_id).options(selectinload(Order.items))
+            Order.id == order_id).options(
+                selectinload(Order.items))  # type: ignore
         return self.session.exec(statement).first()
 
     def delete(self, order_id: UUID) -> bool:

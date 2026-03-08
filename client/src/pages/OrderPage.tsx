@@ -5,7 +5,16 @@ interface Order {
   date: string
   customer_name: string
   currency: string
-  total_amount_incl_tax: string
+  items: OrderItem[]
+}
+
+interface OrderItem {
+  product_id?: string
+  product_name?: string
+  product_sku?: string
+  quantity: number
+  unit_price_excl_tax: number
+  tax_rate: number
 }
 
 const OrderPage = () => {
@@ -21,6 +30,11 @@ const OrderPage = () => {
       })
       .catch(err => console.error("Could not fetch orders:", err))
   }, [])
+
+  const calculateTotalAmountInclTax = (order: Order): number => {
+    return order.items
+      .reduce((a, b) => a + ((b.unit_price_excl_tax * b.quantity) * (1 + b.tax_rate)), 0)
+  }
 
   if (loading) return <p>Fetching orders...</p>
 
@@ -43,7 +57,7 @@ const OrderPage = () => {
               <td>{order.date}</td>
               <td>{order.customer_name}</td>
               <td>{order.currency}</td>
-              <td>{parseFloat(order.total_amount_incl_tax).toFixed(2)}</td>
+              <td>{calculateTotalAmountInclTax(order).toFixed(2)}</td>
               <td style={{ fontSize: '0.8rem', color: '#666' }}>{order.id}</td>
             </tr>
           ))}

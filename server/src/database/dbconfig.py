@@ -1,4 +1,6 @@
+from sqlmodel import SQLModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlmodel import create_engine
 
 
 class Config(BaseSettings):
@@ -15,4 +17,7 @@ class Config(BaseSettings):
     )
 
 
-settings = Config()
+settings = Config()  # type: ignore
+
+DATABASE_URL = f"postgresql://{settings.db_user}:{settings.db_password}@{settings.db_host}/{settings.db_name}"
+engine = create_engine(DATABASE_URL)

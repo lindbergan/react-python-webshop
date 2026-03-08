@@ -1,34 +1,14 @@
-from src.database.dbmanager import DatabaseManager
+from sqlmodel import SQLModel, create_engine
 from src.database.dbconfig import settings
 
-from src.database.order.config import ORDER_TABLE_NAME, ORDER_ITEM_TABLE_NAME
-from src.database.order.schema import headers as order_headers
-from src.database.order.orderitem.schema import headers as order_item_headers
+
+DATABASE_URL = f"postgresql://{settings.db_user}:{settings.db_password}@{settings.db_host}/{settings.db_name}"
+engine = create_engine(DATABASE_URL)
 
 
-def setup_database() -> DatabaseManager | None:
-    try:
-        manager = DatabaseManager(settings)
-
-        with manager as db_manager:
-            db_manager.create_table(ORDER_TABLE_NAME, order_headers)
-            db_manager.create_table(ORDER_ITEM_TABLE_NAME, order_item_headers)
-            print("Tables setup.")
-        return manager
-    except Exception as e:
-        print(f"Added to DB did not work: {e}")
-        return None
-
-
-def main():
-    db_manager = setup_database()
-
-    if db_manager is not None:
-        print("Database sync complete.")
-    else:
-        print("Database sync failed.")
-        exit(1)
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)
 
 
 if __name__ == "__main__":
-    main()
+    create_db_and_tables()

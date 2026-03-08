@@ -25,3 +25,12 @@ Down volumes
 ```
 docker compose down -v
 ```
+
+Update alembic
+```
+alembic revision --autogenerate -m "<message>"
+```
+
+```
+alembic upgrade head
+```

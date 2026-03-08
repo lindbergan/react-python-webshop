@@ -3,7 +3,11 @@ fastapi
 uvicorn
 pydantic
 pytest
+psycopg2
 psycopg2-binary
 pydantic-settings
 python-dotenv
 types-psycopg2
+sqlalchemy
+alembic
+sqlmodel

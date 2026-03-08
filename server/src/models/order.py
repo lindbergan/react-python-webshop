@@ -1,60 +1,49 @@
-from pydantic import BaseModel, computed_field, Field
-
+from typing import List
 from uuid import UUID, uuid4
 from datetime import date
-from typing import List, Dict, Any
-from decimal import Decimal
+from typing import ClassVar, Sequence
+from sqlmodel import SQLModel, Field, Relationship
 
-from src.models.orderitem import OrderItem
+# API validation schemas
 
 
-class Order(BaseModel):
-    id: UUID = Field(default_factory=uuid4)
+class OrderItemBase(SQLModel):
+    product_name: str
+    product_sku: str
+    quantity: int
+    unit_price_excl_tax: float
+    tax_rate: float
+
+
+class OrderCreate(SQLModel):
     date: date
     customer_name: str
     currency: str
-    items: List[OrderItem]
+    items: Sequence[OrderItemBase]
 
-    @computed_field
-    @property
-    def total_amount_excl_tax(self) -> Decimal:
-        return sum((item.total_excl_tax for item in self.items), Decimal(0))
 
-    @computed_field
-    @property
-    def total_tax(self) -> Decimal:
-        return sum((item.tax_amount for item in self.items), Decimal(0))
+# Data base tables
 
-    @computed_field
-    @property
-    def total_amount_incl_tax(self) -> Decimal:
-        return self.total_amount_excl_tax + self.total_tax
 
-    @classmethod
-    def from_db_rows(cls, rows: List[Any]) -> List["Order"]:
-        """
-        Factory method: Convert raw SQL-rows to a list of order Objects
-        """
-        orders_map: Dict[UUID, Dict[str, Any]] = {}
+class Order(SQLModel, table=True):
+    __tablename__: ClassVar[str] = "orders"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    date: date
+    customer_name: str
+    currency: str
 
-        for row in rows:
-            order_id = row["id"]
+    items: List["OrderItem"] = Relationship(back_populates="order")
 
-            if order_id not in orders_map:
-                orders_map[order_id] = {
-                    "id": order_id,
-                    "date": row["date"],
-                    "customer_name": row["customer_name"],
-                    "currency": row["currency"],
-                    "items": []
-                }
 
-            if row.get("product_name") is not None:
-                orders_map[order_id]["items"].append({
-                    "product_name": row["product_name"],
-                    "quantity": row["quantity"],
-                    "unit_price_excl_tax": row["unit_price_excl_tax"],
-                    "tax_rate": row["tax_rate"],
-                })
+class OrderItem(SQLModel, table=True):
+    __tablename__: ClassVar[str] = "orderitems"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
 
-        return [cls(**data) for data in orders_map.values()]
+    product_name: str
+    product_sku: str
+    quantity: int
+    unit_price_excl_tax: float
+    tax_rate: float
+
+    order_id: UUID = Field(foreign_key="orders.id")
+    order: "Order" = Relationship(back_populates="items")
